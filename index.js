@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { createRequire } from "module";
 import BookingRoutes from "./routes/bookingRoutes.js";
 import { scanImage } from "./controllers/scanImage.js";
+import { maximumMatching } from "./controllers/maximumMatching.js";
 
 const require = createRequire(import.meta.url);
 mongoose.set("strictQuery", false);
@@ -61,5 +62,5 @@ app.get('/', (req, res) => {
 	res.send('Running');
 });
 
-
+maximumMatching();
 
