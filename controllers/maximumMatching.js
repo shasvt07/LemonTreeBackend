@@ -5,31 +5,58 @@ globalThis.fetch = fetch;
 const genAI = new GoogleGenerativeAI('AIzaSyDOI4I-arrZ3zkgLi16N1W117iL4x0vOME');
 
 
-export const maximumMatching = async () => {
-    try {
+function validate(input){
+  var arr = []
+  if(input.includes('arr1')) arr.push('arr1');
+  if(input.includes('arr2')) arr.push('arr2');
+  if(input.includes('arr3')) arr.push('arr3');
+
+  if(arr.length === 0) return [];
+  if(arr.length > 1) return [];
+  if(arr.length === 1) return arr;
+}
+
+
+export const maximumMatching = async (req,res) => {
+    try { 
+
+      const givenString = req.body.givenString;
+      console.log(givenString);
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
       const arrays = {
         arr1: ["check-in", "self-check-in process", "entry process", "check me in", "check-in-process"],
-        arr2: ["check-out", "self-checkout", "self-checkout-process", "exit process", "check me out", "checkout-process"],
+        arr2: ["check out", "self checkout", "self checkout process", "exit process", "check me out", "checkout process"],
         arr3: ["booking", "Walk-In", "book room", "book me a room", "book"],
       };
-      const prompt = "find the given string maximum matches to which array of strings and return the name of the array";
-      const givenString = "check me in";
+      const prompt = `Find the givenString maximum matches to which of the given varaitions array and give me the names of the arrays only else give no matches found as the we have 3 arrays arr1, arr2, arr3
+      given arrays: 
+      arr1: ["check in", "self check in process", "entry process", "check me in", "check in process"],
+      arr2: ["booking", "Walk In", "book room", "book me a room", "book"],
+      arr3: ["check out", "self checkout", "self checkout process", "exit process", "check me out", "checkout process"],
+      `;
+      const geminiInput = Object.values(arrays).flat().join(' ');
   
       const content = [
         { partType: 'Prompt', value: prompt },
         { partType: 'User', value: givenString },
-        { partType: 'External', value: arrays },
+        { partType: 'External', value: arrays},
       ];
+
+      const input = Object.values(content).flat().join(' ');
   
-      const result = await model.generateContent(content);
+      const result = await model.generateContent([prompt, givenString]);
       const response = await result.response;
       const text = await response.text();
-      console.log(response);
+      // console.log(response);
       console.log(text);
+      const temp = validate(text);
+      console.log(temp);
+      if(temp.length===0) res.status(404).json("No matches found");
+      else res.status(200).json(String(temp[0]));
+      
     } catch (error) {
-      console.log(error.message);
-      // res.status(400).json({message:error.message});
+      // console.log(error.message);
+      res.status(400).json({message:error.message});
     }
   };
 

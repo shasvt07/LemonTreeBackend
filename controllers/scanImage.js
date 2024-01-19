@@ -55,6 +55,8 @@ async function parseData(input) {
 }
 
 export const scanTesseract = async (req, res) =>{
+  console.log(req.body)
+
   try {
     const url = 'data:image/jpeg;base64,'+req.body.image;
     const worker = await createWorker();

@@ -4,9 +4,9 @@ export const bookingidSearch = async (req, res) => {
     try {
         const booking = await Bookings.findOne({ bookingId: req.query.bookingId});
         if(booking)
-            res.status(200).json(true);
+            res.status(200).json(Boolean(true));
         else
-            res.status(200).json(false);
+            res.status(200).json(Boolean(false));
     } catch (error) {
         res.status(401).json({ message: error.message });
     }
@@ -14,11 +14,11 @@ export const bookingidSearch = async (req, res) => {
 
 export const bookingnameSearch = async(req,res) => {
     try {
-        const booking = await Bookings.findOne({ name: req.query.name});
+        const booking = await Bookings.findOne({ name: req.query.bookingName});
         if(booking)
-            res.status(200).json(true);
+            res.status(200).json(Boolean(true));
         else
-            res.status(200).json(false);
+            res.status(200).json(Boolean(false));
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
