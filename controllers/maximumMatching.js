@@ -2,7 +2,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import fetch from "node-fetch";
 globalThis.fetch = fetch;
 
-const genAI = new GoogleGenerativeAI('AIzaSyDOI4I-arrZ3zkgLi16N1W117iL4x0vOME');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_GENERATIVE_AI_API_KEY);
+
 
 
 function validate(input){
