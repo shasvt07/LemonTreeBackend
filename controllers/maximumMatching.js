@@ -5,7 +5,6 @@ globalThis.fetch = fetch;
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_GENERATIVE_AI_API_KEY);
 
 
-
 function validate(input){
   var arr = []
   if(input.includes('arr1')) arr.push('arr1');
