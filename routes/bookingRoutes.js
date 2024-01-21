@@ -1,6 +1,6 @@
 import express from 'express';
 import { bookingidSearch, bookingnameSearch,addDetails, editBookingDeatails, getDetails} from '../controllers/bookings.js';
-import { scanImage, scanTesseract } from '../controllers/scanImage.js';
+import {scanTesseract } from '../controllers/scanImage.js';
 import { createOrder, verifyPayment } from '../controllers/razorpay.js';
 import { maximumMatching } from '../controllers/maximumMatching.js';
 

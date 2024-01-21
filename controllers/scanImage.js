@@ -6,7 +6,7 @@ globalThis.fetch = fetch;
 import { createWorker } from 'tesseract.js';
 
 
-const genAI = new GoogleGenerativeAI('AIzaSyDOI4I-arrZ3zkgLi16N1W117iL4x0vOME');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_GENERATIVE_AI_API_KEY);
 
 
 const require = createRequire(import.meta.url);
@@ -50,12 +50,12 @@ async function parseData(input) {
       const response = await result.response;
       const finalrespose = await removebacktics(response.text());
       // const text = response.text();
-      console.log(finalrespose);
+      // console.log(finalrespose);
       return finalrespose;
 }
 
 export const scanTesseract = async (req, res) =>{
-  console.log(req.body)
+  // console.log(req.body)
 
   try {
     const url = 'data:image/jpeg;base64,'+req.body.image;
@@ -89,51 +89,5 @@ export const scanTesseract = async (req, res) =>{
     }
   }
 
-
-export const scanImage = async (req, res) =>{
-  
-  try {
-    // Using the OCR.space default free API key (max 10reqs in 10mins) + remote file
-    const url = 'data:image/jpeg;base64,'+req.body.image; 
-    const res1 = await ocrSpace(url, { apiKey: 'K81019325588957'});
-    // const res1 = ReadText(url);
-    console.log(res1);
-    // Using your personal API key + local file
-    // const res2 = await ocrSpace('/path/to/file.pdf', { apiKey: '<API_KEY_HERE>' });
-    // Using your personal API key + base64 image + custom language
-    // const res3 = await ocrSpace(req.query.imagePath, { apiKey: 'K89692836588957'});
-
-    const data = res1.ParsedResults[0]?.ParsedText;
-    console.log(data);
-
-    if(data===undefined){
-      res.status(404).json("Please try again")
-    }
-    const dataGot =await parseData(data);
-    const temp = JSON.parse(dataGot);
-    // console.log(temp)
-    
-    const userData = {
-                      name : temp.name ? temp.name : null ,
-                      dob: temp.dob ? temp.dob : null,
-                      gender :temp.gender ? temp.gender : null,
-                      adhaarNumber :temp.phoneNumbers.length!==0 ? temp.phoneNumbers[0] ? temp.phoneNumbers[0] : null : null
-                      }
-                      // console.log(temp.phoneNumbers[0]);
-    console.log(userData)
-    if(userData.name ===null || userData.dob===null || userData.adhaarNumber===null || userData.gender===null){
-      res.status(404).json("Please try again")
-    }
-    else{
-      const newUserData = new UserData(userData);
-      await newUserData.save();
-      res.status(200).json(userData);
-    }
-    // console.log(temp);
-  } catch (error) {
-    res.status(404).json("unexpected Error, Please try again")
-    console.error(error);
-  }
-}
 
 

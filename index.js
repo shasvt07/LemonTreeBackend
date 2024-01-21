@@ -5,8 +5,6 @@ import cors from'cors';
 import cookieParser from "cookie-parser";
 import { createRequire } from "module";
 import BookingRoutes from "./routes/bookingRoutes.js";
-import { scanImage } from "./controllers/scanImage.js";
-import { maximumMatching } from "./controllers/maximumMatching.js";
 import { AIAgent } from "./controllers/openai.js";
 
 const require = createRequire(import.meta.url);
@@ -27,9 +25,6 @@ const server =require("http").createServer(app);
 // scanImage();
 
 app.use(cors());
-// app.use(cookieParser());
-// app.use(express.json({ limit: '50mb', extended: true }))
-// app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 app.use('/api/bookings',BookingRoutes);
@@ -62,7 +57,5 @@ app.use((err , req, res, next) => {
 app.get('/', (req, res) => {
 	res.send('Running');
 });
-
-// maximumMatching();
 
 // AIAgent();
