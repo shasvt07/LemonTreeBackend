@@ -87,7 +87,7 @@ export const scanTesseract = async (req, res) =>{
   // console.log(req.body)
   try {
     const url = 'data:image/jpeg;base64,'+req.body.image;
-    imageVerification(url);
+    // imageVerification(url);
     const worker = await createWorker();
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
