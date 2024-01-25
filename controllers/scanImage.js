@@ -54,11 +54,40 @@ async function parseData(input) {
       return finalrespose;
 }
 
+
+
+// Function to check if a value matches a given pattern
+const checkPattern = (userData) => {
+
+// Regular expression patterns for each property format
+const namePattern = /^[A-Za-z\s]+$/;
+const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
+const genderPattern = /^(Male|Female|Other)$/i; // Case-insensitive match
+const adhaarNumberPattern = /^\d{4}\s\d{4}\s\d{4}$/;
+
+// Function to check if a value matches a given pattern
+function isFormatValid(value, pattern) {
+    return pattern.test(value);
+}
+
+if (
+    isFormatValid(userData.name, namePattern) &&
+    isFormatValid(userData.dob, dobPattern) &&
+    isFormatValid(userData.gender, genderPattern) &&
+    isFormatValid(userData.adhaarNumber, adhaarNumberPattern)
+) {
+    return true;
+} else {
+    return false;
+}
+
+}
+
 export const scanTesseract = async (req, res) =>{
   // console.log(req.body)
-
   try {
     const url = 'data:image/jpeg;base64,'+req.body.image;
+    imageVerification(url);
     const worker = await createWorker();
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
@@ -76,9 +105,12 @@ export const scanTesseract = async (req, res) =>{
                         adhaarNumber :temp.phoneNumbers.length!==0 ? temp.phoneNumbers[0] ? temp.phoneNumbers[0] : null : null
                         }
       if(userData.name ===null || userData.dob===null || userData.adhaarNumber===null || userData.gender===null){
-        res.status(404).json("Please try again")
+        res.status(404).json("Please try again");
       }
       else{
+        if(!checkPattern(userData)){
+          res.status(404).json("Please try again");
+        }
         const newUserData = new UserData(userData);
         await newUserData.save();
         res.status(200).json(userData);
@@ -90,4 +122,21 @@ export const scanTesseract = async (req, res) =>{
   }
 
 
+  export const imageVerification = async (imageUrl) => {
+    const {spawn} = require('child_process');
+    const python = spawn('python', ['controllers/imageVerification.py', imageUrl]);
+
+    python.stdout.on('data', (data) => {
+      const result = data.toString();
+      console.log('stdout: ' + result);
+    });
+
+    python.stderr.on('data', (data) => {
+        console.log('stderr: ' + data);
+    });
+
+    python.on('close', async (code) => {
+        console.log('child process exited with code ' + code.toString());
+    });
+  }
 
