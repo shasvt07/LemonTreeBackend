@@ -21,8 +21,8 @@ router.get('/verifyPayment', verifyPayment);
 router.post('/maximumMatch',maximumMatching);
 
 //Scaneing Routes
-router.post("/adhaarScanfront",scanAdhaarFront);
-router.patch("/adhaarScanback",scanAdhaarBack);
+router.post("/AdhaarScanfront",scanAdhaarFront);
+router.patch("/AdhaarScanback",scanAdhaarBack);
 router.post("/VoterIdScanfront",scanVoterIdFront);
 router.patch("/VoterIdScanback",scanVoterIdBack);
 router.post('/PassportScan', scanPassport);

@@ -105,7 +105,7 @@ const scanTesseract = async (imageUrl) => {
 export const scanAdhaarFront = async (req, res) =>{
   // console.log(req.body)
   try {
-    const url = 'data:image/jpeg;base64,'+req.body.image;
+    const url = 'data:image/jpeg;base64,'+req.body.idImage;
     // const text = await ocrSpace(url,{ apiKey: 'K89692836588957'});
       const text = await scanTesseract(url);
       // const text = await gptImage(url);
