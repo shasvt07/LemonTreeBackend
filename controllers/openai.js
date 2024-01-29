@@ -1,5 +1,7 @@
 import { OpenAI} from 'openai';
 
+import dotenv from 'dotenv';
+dotenv.config();
 
 const openai = new OpenAI({
     apiKey:process.env.OPENAI_API_KEY,
@@ -41,21 +43,36 @@ export const AIAgent = async () => {
   // console.log(`The input string matches with ${matchingArray} array with a 50% probability.`);
 }
 
-// AiAgent();
-
-
-// export const runPrompt = async (prompt) => {
-
-//     const response = await openai.chat.completions.create({
-//         model: 'gpt-3.5-turbo',
-//         messages: [{ role: 'system', content: 'You are a helpful assistant.' }, ...prompt],
-//       });
+export const scanGPTData = async (userData) => {
+    const prompt = `Extract the releavent infomartion from the given string and return it as a js object. The string is as follows : ${userData}`;
+    const response = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'system', content: 'You are a helpful assistant.' },{ role: 'user', content: prompt }],
+      });
   
-//       console.log('Generated Response:', response.choices[0].message);
-  
-//     console.log(response);
-// }
+      // console.log('Generated Response:', response.choices[0].message.content);
+      const result = response.choices[0].message.content;
+      console.log(result)
+      return result;
+}
 
-// runPrompt(conversation);
+export const gptImage = async (image) => {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4-vision-preview",
+    messages: [
+      {
+        role: "user",
+        content: [
+          { type: "text", text: "extract the releavent details in this image which is the contact details of my friend?" },
+          {
+            type: "image_url",
+            image_url: image,
+          },
+        ],
+      },
+    ],
+  });
+  console.log(response.choices[0].message.content);
+}
 
 

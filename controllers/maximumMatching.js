@@ -1,6 +1,9 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import fetch from "node-fetch";
 globalThis.fetch = fetch;
+import dotenv from "dotenv";
+dotenv.config();
+
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_GENERATIVE_AI_API_KEY);
 
